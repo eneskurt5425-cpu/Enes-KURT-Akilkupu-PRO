@@ -1,3 +1,54 @@
+# ==============================================================================
+# Enes Kurt | AkılKüpü PRO - Akıllı LGS · YKS · KPSS · Sağlık · Planlama Merkezi
+# Kurucu & Baş Geliştirici: Enes Kurt
+# İletişim: eneskurt5425@gmail.com | Konum: Sakarya / Türkiye
+# Sürüm: 9.0 Lifetime | Tek Dosya Flask WSGI (PythonAnywhere Uyumlu)
+# Logo: static/logo.png dosyasına kendi logonu koy (yoksa EK yedek ikon görünür)
+
+# ==============================================================================
+
+# ==============================================================================
+# SURUM NOTLARI
+# v50 -> Temel LGS/YKS/KPSS
+# v51 -> Genis KPSS + plan
+# v52 -> Logo + KPSS geri sayim
+# v53 -> Deneme, su, rehber, SSS
+# v54 -> Elite UI (altin/navy), hero, toast, kopyala, API plan/kpss, genis veri
+# ==============================================================================
+
+# MODÜL HARİTASI (v57 Ultra)
+# ------------------------------------------------------------------------------
+# /                  -> Ana arayüz (LGS varsayılan sekme)
+# /api/hesapla       -> LGS canlı puan JSON
+# /api/durum         -> Sistem durumu JSON
+# /google...html     -> Google site doğrulama
+#
+# Sekmeler:
+#   lgs, yks, kpss, saglik, takdir, pomodoro, plan, deneme, su, rehber
+#
+# Veri:
+#   LISE_VERITABANI  -> seçkin + 81 il otomatik üretim
+#   UNIVERSITE_VERITABANI -> genişletilmiş bölüm listesi
+#   KPSS_KADROLAR    -> P3 / P93 / P94 örnek kadrolar
+#
+# İstemci saklama:
+#   akilkupu_deneme -> deneme günlüğü (localStorage)
+#   akilkupu_su_YYYY-MM-DD -> günlük su (localStorage)
+#
+# Logo: proje kökünde static/logo.png
+# PythonAnywhere: bu dosyayı app.py olarak yükle, static klasörünü ekle
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+# Hizli baslangic (PythonAnywhere):
+# 1) Bu dosyayi app.py olarak yukle (veya WSGI dosyanda import et)
+# 2) static/logo.png ekle (opsiyonel)
+# 3) Reload / Restart Web App
+# 4) /api/durum adresinden JSON durumunu kontrol et
+# 5) Ana sayfada LGS netlerini degistir; puan aninda guncellenir
+# ------------------------------------------------------------------------------
+
 from flask import Flask, render_template_string, request, jsonify
 import json
 import math
@@ -8,6 +59,9 @@ app.config["JSON_AS_ASCII"] = False
 app.config["SECRET_KEY"] = "enes-kurt-akilkupu-pro-sakarya-2026-2027-v80-akilkupu"
 
 
+# ==============================================================================
+# 1. GOOGLE SİTE DOĞRULAMA & SİSTEM DURUMU
+# ==============================================================================
 @app.route("/google3634da1a6efc8200.html")
 def google_verify():
     return "google-site-verification: google3634da1a6efc8200.html", 200, {
@@ -20,7 +74,7 @@ def api_durum():
     return jsonify({
         "durum": "aktif",
         "platform": "Enes Kurt | AkılKüpü PRO - Akıllı Eğitim ve Hesaplama Merkezi",
-        "surum": "9.1 Lifetime",
+        "surum": "9.0 Lifetime",
         "kurucu": "Enes Kurt",
         "konum": "Sakarya / Türkiye",
         "iletisim": "eneskurt5425@gmail.com",
@@ -42,6 +96,9 @@ def api_durum():
     })
 
 
+# ==============================================================================
+# 2. LGS DERS YAPILANDIRMASI VE 2018 - 2026 YIL PARAMETRELERİ
+# ==============================================================================
 LGS_DERSLER = [
     {"key": "turkce", "ad": "Türkçe", "kisa": "TR", "katsayi": 4, "max": 20, "renk": "#10b981",
      "ipucu": "Paragraf hızı, sözel mantık, fiilimsiler ve cümlede anlam netleri belirleyicidir."},
@@ -70,6 +127,9 @@ LGS_YIL_PARAMETRELERI = {
 }
 
 
+# ==============================================================================
+# 3. YKS (TYT - AYT - YDT) DERS YAPILANDIRMASI VE PARAMETRELERİ
+# ==============================================================================
 TYT_DERSLER = [
     {"key": "tyt_turkce", "ad": "TYT Türkçe", "soru": 40, "katsayi": 3.3},
     {"key": "tyt_sosyal", "ad": "TYT Sosyal Bilimler", "soru": 20, "katsayi": 3.4},
@@ -100,6 +160,9 @@ YKS_YIL_PARAMETRELERI = {
 }
 
 
+# ==============================================================================
+# 4. KPSS - GENİŞLETİLMİŞ KADRO LİSTESİ
+# ==============================================================================
 KPSS_DERSLER = [
     {"key": "kpss_gy", "ad": "Genel Yetenek (Türkçe + Matematik)", "soru": 60, "katsayi": 0.50},
     {"key": "kpss_gk", "ad": "Genel Kültür (Tarih + Coğrafya + Vatandaşlık)", "soru": 60, "katsayi": 0.50},
@@ -279,8 +342,18 @@ KPSS_KADROLAR = [
 ]
 
 
+# ==============================================================================
+# 5. LİSE VE ÜNİVERSİTE VERİTABANI (GENİŞLETİLMİŞ)
 
+# ------------------------------------------------------------------------------
+# Veri kalitesi notu:
+# - Taban puan, yüzdelik ve sıralama alanları EGITIM SIMULASYONUDUR.
+# - Gercek yerlestirme / atama icin resmi MEB, OSYM ve kurum ilanlari esastir.
+# - Sakarya okullari ve SUBU / SAU bolumleri yerel odak icin zenginlestirilmistir.
+# - 81 il otomatik uretimi, seckin listeyle birlestirilerek genis katalog olusturur.
+# ------------------------------------------------------------------------------
 
+# ==============================================================================
 RAW_SECKIN_LISELER = """
 Galatasaray Lisesi|İstanbul|Anadolu|0.04|494.50|100|Fransızca eğitim veren, tarihi ve uluslararası başarısıyla Türkiye'nin mutlak zirvesi.
 İstanbul Erkek Lisesi|İstanbul|Anadolu|0.05|493.80|180|Almanca Abitur programı sunan, bilim, mühendislik ve sanat alanında öncü lise.
@@ -4032,7 +4105,11 @@ UNIVERSITE_VERITABANI = [
 ]
 
 
+# ==============================================================================
 
+# ==============================================================================
+# SINAV TAKVİMİ & ÇALIŞMA TAKTİĞİ (bilgi blokları - UI rehber ile paylaşılır)
+# ==============================================================================
 SINAV_TAKVIMI = [
     {"ad": "LGS 2027 (simülasyon)", "tarih": "2027-06-13", "not": "Haziran 2. hafta beklentisi - resmi tarih MEB duyurusuna bağlı"},
     {"ad": "YKS TYT 2027 (simülasyon)", "tarih": "2027-06-20", "not": "Haziran 3. hafta beklentisi - resmi tarih ÖSYM kılavuzuna bağlı"},
@@ -4132,6 +4209,7 @@ def bmi_sinif(bmi):
     return "Obezite riski", "rose"
 
 
+# Haftalık net hedef serisi üretici
 def net_hedef_serisi(mevcut, hedef, gun):
     mevcut = float(mevcut or 0)
     hedef = float(hedef or 0)
@@ -4193,6 +4271,7 @@ def guvenli_float(deger, default=0.0, max_deger=None):
     return max(0.0, x)
 
 
+# Performans rozetleri (UI rozet metinleri)
 ROZETLER = [
     {"kod": "ilk_net", "ad": "İlk Adım", "kosul": "İlk net girişini yaptı"},
     {"kod": "deneme3", "ad": "Deneme Ustası", "kosul": "3 deneme kaydı"},
@@ -4201,6 +4280,7 @@ ROZETLER = [
     {"kod": "plan", "ad": "Planlı Savaşçı", "kosul": "Net hedef oluşturdu"},
 ]
 
+# SEO ve paylaşım metin şablonları
 PAYLASIM_SABLONLARI = {
     "lgs": "AkılKüpü PRO ile LGS simülasyonum: {puan} puan, %{yuzdelik} dilim. #LGS #AkılKüpüPro",
     "yks": "YKS simülasyonum (AkılKüpü PRO): TYT {tyt} · SAY {say}. #YKS #AkılKüpüPro",
@@ -4261,6 +4341,8 @@ def paylasim_metni(tur, **kw):
         return s
 
 
+# 6. HESAPLAMA MOTORLARI
+# ==============================================================================
 def guvenli_int(deger, max_deger):
     if deger is None:
         return 0
@@ -4373,6 +4455,9 @@ def tum_yillar_karsilastir(form_data):
     return sonuclar
 
 
+# ==============================================================================
+# 7. ROTALAR
+# ==============================================================================
 VARSAYILAN_FORM = {
     "turkce_d": "18", "turkce_y": "2",
     "matematik_d": "16", "matematik_y": "2",
@@ -4491,6 +4576,9 @@ def api_hesapla():
     })
 
 
+# ==============================================================================
+# 8. HTML ŞABLONU (YENİLENMİŞ GÖRSEL + YENİ MODÜL)
+# ==============================================================================
 
 @app.route("/api/favori-meta")
 def api_favori_meta():
@@ -4499,6 +4587,7 @@ def api_favori_meta():
 
 @app.route("/api/kelime")
 def api_kelime():
+    # sunucu tarafı örnek paket (istemci kendi listesini kullanır)
     ornek = [
         {"en": "discipline", "tr": "disiplin"},
         {"en": "success", "tr": "başarı"},
@@ -4596,6 +4685,7 @@ def api_net_puan():
     return jsonify({"net": net, "kaba_puan": net_to_kaba_lgs_puan(net)})
 
 
+# Ek üniversite satırları (çalışan veri)
 _EK_UNIV = []
 for _il in ["Amasya", "Artvin", "Bartın", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Çankırı", "Çorum", "Düzce", "Giresun", "Gümüşhane", "Hakkari", "Iğdır", "Isparta", "Karabük", "Karaman", "Kars", "Kastamonu", "Kırıkkale", "Kırklareli", "Kırşehir", "Kilis", "Kütahya", "Mardin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Siirt", "Sinop", "Sivas", "Şırnak", "Tekirdağ", "Tokat", "Tunceli", "Uşak", "Yalova", "Yozgat", "Zonguldak", "Aksaray", "Ardahan", "Batman"]:
     for _b, _pt, _tab, _sira in [
@@ -9116,6 +9206,7 @@ ENTERPRISE_HTML_TEMPLATE = """<!DOCTYPE html>
         .stat-pill { letter-spacing: 0.02em; }
         details summary { list-style: none; }
         details summary::-webkit-details-marker { display: none; }
+        #modul_deneme input:focus, #modul_plan input:focus, #modul_su button:focus {
             outline: 2px solid rgba(59, 130, 246, 0.45); outline-offset: 1px;
         }
 
@@ -9138,6 +9229,7 @@ ENTERPRISE_HTML_TEMPLATE = """<!DOCTYPE html>
                 radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,0.18), transparent 55%),
                 radial-gradient(900px 500px at 90% 0%, rgba(245,197,66,0.10), transparent 50%),
                 radial-gradient(800px 400px at 50% 100%, rgba(139,92,246,0.08), transparent 45%),
+                #020617;
             animation: bgShift 18s ease-in-out infinite alternate;
         }
         @keyframes bgShift {
@@ -9351,12 +9443,14 @@ ENTERPRISE_HTML_TEMPLATE = """<!DOCTYPE html>
             0% { background-position: 0% center; }
             100% { background-position: 200% center; }
         }
+        #toast {
             animation: toastIn 0.35s cubic-bezier(.2,.8,.2,1);
         }
         @keyframes toastIn {
             from { opacity: 0; transform: translateY(12px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
+        #pomoSure {
             animation: softGlow 3s ease-in-out infinite;
         }
         @keyframes softGlow {
@@ -12294,52 +12388,33 @@ id="modul_rehber" class="space-y-6 hidden">
 
         
 const AI_KB = [
-  {k:["lgs","net","hesapla","msp"], c:"LGS net = Doğru − (Yanlış ÷ 3). Türkçe, Matematik ve Fen katsayısı 4; İnkılap, Din ve İngilizce katsayısı 1. Ağırlıklı net ile MSP simüle edilir. Resmi sonuç MEB'e aittir."},
-  {k:["lgs","yüzde","dilim","sıra"], c:"Yüksek MSP genelde düşük yüzdelik dilim demektir. 480+ çok üst dilim; 420 civarı orta-üst band simülasyonudur. Okul listesi taban puana göre filtrelenir."},
-  {k:["yks","tyt"], c:"TYT: Türkçe 40, Sosyal 20, Temel Matematik 40, Fen 20. Net = D − Y/4. TYT netleri tüm YKS puan türlerine taban oluşturur."},
-  {k:["ayt","say","sayısal"], c:"SAY puanında AYT Matematik + Fizik + Kimya + Biyoloji ağırlıklıdır. TYT netin de katkısı vardır. OBP eklenir (diploma×5×0.12, kırıkta daha düşük)."},
-  {k:["ea","eşit","sözel"], c:"EA: AYT Mat + Türk Dili ve Edebiyatı + Tarih-1 + Coğrafya-1 ağırlıklıdır. SÖZ: edebiyat ve sosyal AYT dersleri öne çıkar. YDT dil puanı ayrıdır."},
-  {k:["obp","diploma","kırık"], c:"OBP = diploma notu × 5 (50–500 aralığı). Yerleştirme katkısı genelde OBP × 0.12. Aynı programa girip ayrılırsan kırık OBP uygulanabilir."},
-  {k:["kpss","p3","lisans"], c:"KPSS lisans (P3) için Genel Yetenek ve Genel Kültür netleri kullanılır. Sitedeki P1/P2/P3 simülasyonu ağırlıklı net modelidir; atama tabanları kadroya göre değişir."},
-  {k:["p93","ön lisans","p94","ortaöğretim"], c:"P93 ön lisans, P94 ortaöğretim kadroları içindir. Unvan listesinde tur alanına bak. Resmi puan ÖSYM standart sapmasına bağlıdır."},
-  {k:["dgs"], c:"DGS, ön lisanstan lisansa dikey geçiştir. Sözel ve sayısal netler + ÖBP ile puan üretilir. Hedef bölüm kontenjan ve taban puanları ÖSYM kılavuzundadır."},
-  {k:["ales"], c:"ALES lisansüstü giriş içindir. Sayısal, sözel ve eşit ağırlık puanları hesaplanır. Net = D − Y/4 mantığı kullanılır (simülasyon)."},
-  {k:["plan","hedef","program","çalışma düzeni"], c:"(Hedef net − mevcut net) ÷ kalan gün = günlük net artışı. Her gün o kadar net kazanmayı hedefle. Konuları parçala; deneme günlüğü ile ölç."},
-  {k:["pomodoro","mola","odak"], c:"Klasik pomodoro: 25 dk odak + 5 dk mola. 4 turdan sonra 15–30 dk uzun mola. Zor konular için 50/10 da deneyebilirsin. Telefonu uzak tut."},
-  {k:["deneme","analiz","yanlış"], c:"Denemeyi kaydet. Aynı konuda 3+ yanlış varsa o konuyu yeniden çalış. Kıyas sekmesiyle iki deneme netini karşılaştır. Trend aşağıysa tempo değil yöntem değiştir."},
-  {k:["bmi","kilo","boy","ideal"], c:"BMI = kilo(kg) ÷ boy(m)². 18.5–24.9 sık kullanılan normal aralıktır. BMR, istirahat kalori ihtiyacı tahminidir. Sınav döneminde aşırı diyet risklidir."},
-  {k:["su","bardak","su iç"], c:"Günlük ~8 bardak (2 litre civarı) iyi bir hedeftir. Su sekmesinde +1 ile işaretle; veri tarayıcıda saklanır. Sabah ve deneme öncesi suyu ihmal etme."},
-  {k:["uyku","uyumak","enerji"], c:"7–9 saat uyku odak için ideal banddır. 6 saatin altı netleri düşürür. Yatma-kalkma saatini sabitle; Uyku sekmesinden süreyi hesapla."},
-  {k:["takdir","teşekkür","belge"], c:"Çoğu okulda 85+ takdir, 70–84.99 teşekkür için kullanılır. Kesin eşik okul yönetmeliğine göre değişir; bu site simülasyon gösterir."},
-  {k:["motivasyon","stres","kaygı","korku"], c:"Stres normaldir. Küçük hedefler koy, seri gününü bozma, su ve uykuyu koru. 25 dakikalık bir pomodoro ile başlamak çoğu zaman yeter."},
-  {k:["okul","lise","taban","yerleş"], c:"Lise listesi taban puan ve yüzdelik simülasyonuna göre süzülür. Puanın tabanın biraz altındaysa riskli; üstündeyse daha güvenli bölgedesin. Kontenjanı da oku."},
-  {k:["üniversite","bölüm","say ea"], c:"Üniversite listesinde puan türü (SAY/EA/SÖZ/DİL) ve taban puana bak. Kendi ham puanını ilgili türe göre üret; sonra ara."},
-  {k:["seri","streak","alışkanlık"], c:"Üst üste çalışma günü serisi alışkanlık bağlar. Bir gün atlanırsa seri sıfırlanabilir. Seri sekmesinden 'bugün çalıştım' de."},
-  {k:["kelime","ingilizce","vocabulary"], c:"Kelime kartı ile EN→TR çalış. Gördüğün kelimeyi yüksek sesle tekrarla; ertesi gün aynı kartı sor."},
-  {k:["kronometre","süre","zaman"], c:"Serbest kronometre deneme çözümü veya konu çalışmasını ölçmek içindir. Resmi deneme süreleri için Deneme Süresi sekmesini kullan (TYT 165, AYT 180, LGS 75–80, KPSS 130)."},
-  {k:["merhaba","selam","hey","günaydın"], c:"Merhaba! Ben AkılKüpü Asistan. LGS, YKS, KPSS, OBP, plan, BMI, su, uyku veya motivasyon sorabilirsin."},
-  {k:["kimsin","nesin","yapay zeka","ai"], c:"AkılKüpü PRO içinde çalışan çevrimdışı kural tabanlı asistanım. İnternete çıkmam; site bilgisiyle yanıtlarım. Kurucu: Enes Kurt. Resmi sonuçlar MEB/ÖSYM'ye aittir."},
-  {k:["sağlık","beslenme","egzersiz"], c:"Kısa yürüyüş, düzenli su ve dengeli öğün odak süresini artırır. Aşırı kafein uykuyu bozabilir. BMI sekmesinden kaba kontrol yapabilirsin."},
-  {k:["yanlış","boş","strateji"], c:"Bilmediğin soruyu uzun süre yoklama. Önce emin olduklarını çöz, işaretle, dön. LGS'de yanlış 1/3 net yer; boş net yemez ama puan da getirmez."},
-  {k:["teşekkür","sağol","eyvallah"], c:"Rica ederim. Başka sorunun olursa yaz. Düzenli net ve uyku, motivasyon konuşmasından daha çok işe yarar."},
+  {k:["lgs","net","hesap"], c:"LGS net = Doğru − (Yanlış ÷ 3). Türkçe, Matematik ve Fen katsayısı 4; diğer dersler 1. Ağırlıklı net üzerinden MSP simülasyonu yapılır."},
+  {k:["yks","tyt","ayt","say","ea"], c:"YKS'de TYT netleri tüm puan türlerine etki eder. SAY için AYT Mat + Fen kritik; EA için Mat + sözel AYT. OBP = diploma × 5, katkı genelde OBP × 0.12 (kırıkta %10 düşer)."},
+  {k:["kpss","p3","p93","p94"], c:"KPSS P3 lisans (GY %50 + GK %50 benzeri ağırlıklarla simüle edilir). P93 ön lisans, P94 ortaöğretim kadroları içindir. Resmi puan ÖSYM standart sapmasına bağlıdır."},
+  {k:["plan","çalışma","program","hedef"], c:"Hedef net − mevcut net = artış. Artışı kalan güne böl = günlük net hedefi. Pomodoro (25/5) ile blokla çalış; her 4 pomodoroda uzun mola ver."},
+  {k:["bmi","kilo","boy","sağlık"], c:"BMI = kilo (kg) ÷ boy(m)². 18.5–24.9 normal aralık kabul edilir. BMR Harris-Benedict ile tahmini günlük kalori ihtiyacını verir. Sınav döneminde düzenli uyku ve su kritik."},
+  {k:["su","bardak","su iç"], c:"Günlük 8 bardak (~2 litre) hedefi iyi bir başlangıçtır. AkılKüpü Su sekmesinde bardakları işaretle; tarayıcıda saklanır."},
+  {k:["pomodoro","mola","odak"], c:"25 dk odak + 5 dk mola klasik pomodorodur. Zor konularda 50/10 da kullanılır. Telefonu uzak tut."},
+  {k:["obp","diploma","kırık"], c:"OBP = diploma notu × 5. Yerleştirmeye katkı genelde OBP × 0.12. Aynı programa yerleşip ayrılırsan kırık OBP uygulanabilir (katkı düşer)."},
+  {k:["dgs","ales"], c:"DGS ön lisans → lisans dikey geçiş; sözel/sayısal net + ÖBP ile puanlanır. ALES lisansüstü için; sayısal, sözel ve eşit ağırlık puanları üretilir."},
+  {k:["deneme","yanlış","analiz"], c:"Denemeyi kaydet, net trendine bak. Aynı konuda 3+ yanlış varsa o konuyu yeniden çalış. Kıyas sekmesiyle iki denemeyi karşılaştır."},
+  {k:["motivasyon","stres","korku"], c:"Stres normaldir. Küçük hedefler koy, seri gününü bozma, uyku ve suyu aksatma. Bir günde her şeyi bitirmek zorunda değilsin."},
+  {k:["takdir","teşekkür","belge"], c:"Genelde dönem ortalaması 85+ takdir, 70–84.99 teşekkür belgesi için kullanılır (okul yönetmeliğine göre değişir). Simülasyon bilgilendirme amaçlıdır."},
+  {k:["merhaba","selam","hey"], c:"Merhaba! AkılKüpü Asistan burda. LGS, YKS, KPSS, plan, BMI veya su hakkında sor."},
+  {k:["kimsin","nesin","yapay"], c:"Ben AkılKüpü PRO içinde çalışan çevrimdışı kural tabanlı asistanım. İnternete bağlanmam; site içi bilgiyle yanıtlarım. Kurucu: Enes Kurt."},
 ];
 function aiYanit(soru) {
-  const s = (soru || '').toLowerCase().trim()
-    .replace(/ı/g,'i').replace(/İ/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c');
-  if (!s) return 'Bir soru yaz veya ustteki hizli butonlardan birini dene.';
+  const s = (soru || '').toLowerCase().trim();
+  if (!s) return 'Bir soru yaz veya üstteki hızlı butonlardan birini dene.';
   let best = null, score = 0;
   AI_KB.forEach(row => {
     let sc = 0;
-    row.k.forEach(k => {
-      const kk = k.replace(/ı/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c');
-      if (s.includes(kk)) sc += (kk.length > 3 ? 2 : 1);
-    });
+    row.k.forEach(k => { if (s.includes(k)) sc++; });
     if (sc > score) { score = sc; best = row.c; }
   });
-  if (best && score > 0) return best;
-  return 'Bu konuda net kural bulamadim. Ornek: "LGS net", "YKS TYT", "KPSS P3", "OBP", "calisma plani", "BMI", "su", "uyku", "pomodoro". Resmi sonuc MEB/OSYM\\'ye aittir.';
+  if (best) return best;
+  return 'Bu konuda net bir kural bulamadım. Şunu dene: "LGS net", "YKS puan", "KPSS P3", "çalışma planı", "BMI", "su", "pomodoro", "OBP". Resmi sonuçlar MEB/ÖSYM\'ye aittir.';
 }
-
 function aiMesaj(kim, metin) {
   const box = document.getElementById('aiChat');
   if (!box) return;
