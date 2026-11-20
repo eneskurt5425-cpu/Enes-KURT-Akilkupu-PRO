@@ -2,7 +2,7 @@
 # Enes Kurt | AkılKüpü PRO - Akıllı LGS · YKS · KPSS · Sağlık · Planlama Merkezi
 # Kurucu & Baş Geliştirici: Enes Kurt
 # İletişim: eneskurt5425@gmail.com | Konum: Sakarya / Türkiye
-# Sürüm: 9.0 Lifetime | Tek Dosya Flask WSGI (PythonAnywhere Uyumlu)
+# Sürüm: 8.0 Feature Core | Tek Dosya Flask WSGI (PythonAnywhere Uyumlu)
 # Logo: static/logo.png dosyasına kendi logonu koy (yoksa EK yedek ikon görünür)
 
 # ==============================================================================
@@ -74,7 +74,7 @@ def api_durum():
     return jsonify({
         "durum": "aktif",
         "platform": "Enes Kurt | AkılKüpü PRO - Akıllı Eğitim ve Hesaplama Merkezi",
-        "surum": "9.0 Lifetime",
+        "surum": "8.0 Feature Core",
         "kurucu": "Enes Kurt",
         "konum": "Sakarya / Türkiye",
         "iletisim": "eneskurt5425@gmail.com",
@@ -83,7 +83,7 @@ def api_durum():
         "gercek_kpss_kadro_sayisi": len(KPSS_KADROLAR),
         "desteklenen_lgs_yillari": sorted(list(LGS_YIL_PARAMETRELERI.keys())),
         "desteklenen_yks_yillari": sorted(list(YKS_YIL_PARAMETRELERI.keys())),
-        "moduller": ["lgs","yks","kpss","saglik","takdir","pomodoro","plan","deneme","su","rehber","ai","uyku","motivasyon","notdefteri","kronometre","yuzdelik","obp","dgs","ales","favori"],
+        "moduller": ["lgs", "yks", "kpss", "saglik", "takdir", "pomodoro", "plan", "deneme", "su", "rehber"],
         "ozellikler": [
             "LGS 2018-2026 yil profili",
             "YKS TYT AYT YDT puan",
@@ -9159,7 +9159,7 @@ ENTERPRISE_HTML_TEMPLATE = """<!DOCTYPE html>
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enes KURT | AkılKüpü PRO - Akıllı Eğitim ve Hesaplama Merkezi</title><!--Enes KURT | AkılKüpü PRO - Akıllı Eğitim ve Hesaplama Merkezi</title>
+  <title>Enes KURT | AkılKüpü PRO - Akıllı Eğitim ve Hesaplama Merkezi</title>
   <meta name="description" content="Enes Kurt tarafından geliştirilen AkılKüpü PRO: LGS, YKS, KPSS puan hesaplama, deneme günlüğü, su takibi, OBP, DGS, ALES, pomodoro ve okul/bölüm rehberi. Ücretsiz akıllı eğitim platformu." />
   <meta name="author" content="Enes Kurt" />
   <meta name="keywords" content="AkılKüpü PRO, Enes Kurt, LGS hesaplama, YKS puan, KPSS P3, OBP, DGS, ALES, deneme net, pomodoro, lise taban puan" />
@@ -9542,14 +9542,7 @@ ENTERPRISE_HTML_TEMPLATE = """<!DOCTYPE html>
                 <button onclick="sekmeDegistir('su')" id="nav_su" class="nav-btn px-3.5 py-2 rounded-xl bg-slate-800/90 text-slate-300 hover:bg-slate-700 font-bold">
                     <i class="fa-solid fa-droplet mr-1"></i> Su
                 </button>
-                
-<button type="button" onclick="sekmeDegistir('ai')" id="nav_ai" class="nav-btn px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">AI Asistan</button>
-<button type="button" onclick="sekmeDegistir('uyku')" id="nav_uyku" class="nav-btn px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">Uyku</button>
-<button type="button" onclick="sekmeDegistir('motivasyon')" id="nav_motivasyon" class="nav-btn px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">Motivasyon</button>
-<button type="button" onclick="sekmeDegistir('notdefteri')" id="nav_notdefteri" class="nav-btn px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">Not</button>
-<button type="button" onclick="sekmeDegistir('kronometre')" id="nav_kronometre" class="nav-btn px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">Kronometre</button>
-<button type="button" onclick="sekmeDegistir('yuzdelik')" id="nav_yuzdelik" class="nav-btn px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">Yüzdelik</button>
-<button onclick="sekmeDegistir('rehber')" id="nav_rehber" class="nav-btn px-3.5 py-2 rounded-xl bg-slate-800/90 text-slate-300 hover:bg-slate-700 font-bold">
+                <button onclick="sekmeDegistir('rehber')" id="nav_rehber" class="nav-btn px-3.5 py-2 rounded-xl bg-slate-800/90 text-slate-300 hover:bg-slate-700 font-bold">
                     <i class="fa-solid fa-book-open mr-1"></i> Rehber
                 </button>
                 <button onclick="sekmeDegistir('favori')" id="nav_favori" class="nav-btn px-3.5 py-2 rounded-xl bg-slate-800/90 text-slate-300 hover:bg-slate-700 font-bold">
@@ -10257,91 +10250,7 @@ ENTERPRISE_HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
 
         <!-- REHBER / STRATEJİ -->
-        <div 
-<section id="modul_ai" class="hidden space-y-4">
-  <div class="panel p-5 max-w-3xl mx-auto space-y-4">
-    <div class="flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center text-white font-black text-lg">AI</div>
-      <div>
-        <h2 class="font-black text-white text-lg">AkılKüpü Asistan</h2>
-        <p class="text-xs text-slate-400">Çevrimdışı minik yapay zeka · LGS / YKS / KPSS / plan / sağlık sorularına yanıt verir</p>
-      </div>
-    </div>
-    <div id="aiChat" class="h-72 overflow-y-auto rounded-xl bg-slate-950 border border-slate-800 p-4 space-y-3 text-sm">
-      <div class="text-slate-400"><span class="text-violet-400 font-bold">Asistan:</span> Merhaba! Ben AkılKüpü Asistan. Net, puan, çalışma planı, su, BMI veya sınav stratejisi sorabilirsin.</div>
-    </div>
-    <div class="flex flex-wrap gap-2">
-      <button type="button" onclick="aiHizli('lgs net nasıl hesaplanır')" class="px-3 py-1.5 rounded-lg bg-slate-800 text-[11px] font-bold hover:bg-slate-700">LGS net</button>
-      <button type="button" onclick="aiHizli('yks say puan')" class="px-3 py-1.5 rounded-lg bg-slate-800 text-[11px] font-bold hover:bg-slate-700">YKS puan</button>
-      <button type="button" onclick="aiHizli('kpss p3 nedir')" class="px-3 py-1.5 rounded-lg bg-slate-800 text-[11px] font-bold hover:bg-slate-700">KPSS P3</button>
-      <button type="button" onclick="aiHizli('çalışma planı')" class="px-3 py-1.5 rounded-lg bg-slate-800 text-[11px] font-bold hover:bg-slate-700">Plan</button>
-      <button type="button" onclick="aiHizli('bmi nedir')" class="px-3 py-1.5 rounded-lg bg-slate-800 text-[11px] font-bold hover:bg-slate-700">BMI</button>
-      <button type="button" onclick="aiHizli('su hedefi')" class="px-3 py-1.5 rounded-lg bg-slate-800 text-[11px] font-bold hover:bg-slate-700">Su</button>
-      <button type="button" onclick="aiHizli('pomodoro')" class="px-3 py-1.5 rounded-lg bg-slate-800 text-[11px] font-bold hover:bg-slate-700">Pomodoro</button>
-    </div>
-    <div class="flex gap-2">
-      <input id="aiInput" type="text" placeholder="Sorunu yaz..." class="flex-1 input-elite p-3 text-sm" onkeydown="if(event.key==='Enter')aiGonder()">
-      <button type="button" onclick="aiGonder()" class="btn-p px-5 py-3 text-sm font-black">Gönder</button>
-    </div>
-  </div>
-</section>
-
-<section id="modul_uyku" class="hidden space-y-4">
-  <div class="panel p-6 max-w-md mx-auto space-y-3">
-    <h2 class="font-black text-white">Uyku & Enerji</h2>
-    <p class="text-xs text-slate-400">Yatma ve kalkma saatine göre uyku süresi ve öneri</p>
-    <div class="grid grid-cols-2 gap-2">
-      <div><label class="text-[10px] text-slate-500">Yattın</label><input id="uykuYat" type="time" value="23:30" oninput="uykuHesapla()" class="w-full input-elite p-2 text-sm"></div>
-      <div><label class="text-[10px] text-slate-500">Kalktın</label><input id="uykuKalk" type="time" value="07:00" oninput="uykuHesapla()" class="w-full input-elite p-2 text-sm"></div>
-    </div>
-    <div class="text-center space-y-1">
-      <p id="uykuSure" class="text-3xl font-black text-cyan-400">—</p>
-      <p id="uykuYorum" class="text-sm text-slate-300">—</p>
-    </div>
-  </div>
-</section>
-
-<section id="modul_motivasyon" class="hidden space-y-4">
-  <div class="panel p-6 max-w-lg mx-auto text-center space-y-4">
-    <h2 class="font-black text-white">Motivasyon Kartı</h2>
-    <p id="motMetin" class="text-lg text-slate-200 leading-relaxed min-h-[4rem]">Hazırsan başla.</p>
-    <button type="button" onclick="motYeni()" class="btn-p px-6 py-3 text-sm font-black">Yeni söz</button>
-  </div>
-</section>
-
-<section id="modul_notdefteri" class="hidden space-y-4">
-  <div class="panel p-6 max-w-lg mx-auto space-y-3">
-    <h2 class="font-black text-white">Hızlı Not Defteri</h2>
-    <textarea id="notDefter" rows="8" placeholder="Bugünkü hedefler, eksik konular..." class="w-full input-elite p-3 text-sm" oninput="notKaydet()"></textarea>
-    <div class="flex justify-between text-[11px] text-slate-500"><span>Otomatik kaydedilir</span><button type="button" onclick="notTemizle()" class="text-rose-400 font-bold">Temizle</button></div>
-  </div>
-</section>
-
-<section id="modul_kronometre" class="hidden space-y-4">
-  <div class="panel p-6 max-w-md mx-auto text-center space-y-3">
-    <h2 class="font-black text-white">Serbest Kronometre</h2>
-    <p id="kronGoster" class="text-5xl font-black text-emerald-400">00:00:00</p>
-    <div class="flex justify-center gap-2">
-      <button type="button" onclick="kronBaslat()" class="btn-p px-4 py-2 text-xs">Başlat</button>
-      <button type="button" onclick="kronDur()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold">Dur</button>
-      <button type="button" onclick="kronSifir()" class="px-4 py-2 rounded-xl bg-rose-900 text-xs font-bold">Sıfırla</button>
-    </div>
-  </div>
-</section>
-
-<section id="modul_yuzdelik" class="hidden space-y-4">
-  <div class="panel p-6 max-w-md mx-auto space-y-3">
-    <h2 class="font-black text-white">Yüzdelik Dilim Tahmini</h2>
-    <p class="text-xs text-slate-400">LGS benzeri puan → yaklaşık dilim (simülasyon)</p>
-    <input id="ydPuan" type="number" value="450" min="100" max="500" oninput="yuzdelikHesapla()" class="w-full input-elite p-3 text-sm">
-    <div class="grid grid-cols-2 gap-2 text-center">
-      <div class="p-3 rounded-xl bg-slate-950"><p class="text-[10px] text-slate-500">Yüzdelik</p><p id="ydDilim" class="text-2xl font-black text-amber-400">—</p></div>
-      <div class="p-3 rounded-xl bg-slate-950"><p class="text-[10px] text-slate-500">Tahmini sıra</p><p id="ydSira" class="text-2xl font-black text-blue-400">—</p></div>
-    </div>
-  </div>
-</section>
-
-id="modul_rehber" class="space-y-6 hidden">
+        <div id="modul_rehber" class="space-y-6 hidden">
             <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
                     <h3 class="font-black text-sm text-white flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-blue-400"></i> LGS Strateji Kartı</h3>
@@ -10838,8 +10747,7 @@ id="modul_rehber" class="space-y-6 hidden">
         geriSayimlariGuncelle();
 
         function sekmeDegistir(mod) {
-            try { window.scrollTo({top:0, behavior:"smooth"}); } catch(e) {}
-            ['lgs', 'yks', 'kpss', 'saglik', 'takdir', 'pomodoro', 'plan', 'deneme', 'su', 'rehber', 'favori', 'seri', 'kelime', 'kiyas', 'rapor', 'profil', 'obp', 'dgs', 'arac', 'ales', 'hedef', 'ai', 'uyku', 'motivasyon', 'notdefteri', 'kronometre', 'yuzdelik'].forEach(m => {
+            ['lgs', 'yks', 'kpss', 'saglik', 'takdir', 'pomodoro', 'plan', 'deneme', 'su', 'rehber', 'favori', 'seri', 'kelime', 'kiyas', 'rapor', 'profil', 'obp', 'dgs', 'arac', 'ales', 'hedef'].forEach(m => {
                 const box = document.getElementById('modul_' + m);
                 const nav = document.getElementById('nav_' + m);
                 if (box) box.classList.add('hidden');
@@ -12386,146 +12294,7 @@ id="modul_rehber" class="space-y-6 hidden">
             safeText('yolSonuc', (h*s).toFixed(1) + ' km');
         }
 
-        
-const AI_KB = [
-  {k:["lgs","net","hesap"], c:"LGS net = Doğru − (Yanlış ÷ 3). Türkçe, Matematik ve Fen katsayısı 4; diğer dersler 1. Ağırlıklı net üzerinden MSP simülasyonu yapılır."},
-  {k:["yks","tyt","ayt","say","ea"], c:"YKS'de TYT netleri tüm puan türlerine etki eder. SAY için AYT Mat + Fen kritik; EA için Mat + sözel AYT. OBP = diploma × 5, katkı genelde OBP × 0.12 (kırıkta %10 düşer)."},
-  {k:["kpss","p3","p93","p94"], c:"KPSS P3 lisans (GY %50 + GK %50 benzeri ağırlıklarla simüle edilir). P93 ön lisans, P94 ortaöğretim kadroları içindir. Resmi puan ÖSYM standart sapmasına bağlıdır."},
-  {k:["plan","çalışma","program","hedef"], c:"Hedef net − mevcut net = artış. Artışı kalan güne böl = günlük net hedefi. Pomodoro (25/5) ile blokla çalış; her 4 pomodoroda uzun mola ver."},
-  {k:["bmi","kilo","boy","sağlık"], c:"BMI = kilo (kg) ÷ boy(m)². 18.5–24.9 normal aralık kabul edilir. BMR Harris-Benedict ile tahmini günlük kalori ihtiyacını verir. Sınav döneminde düzenli uyku ve su kritik."},
-  {k:["su","bardak","su iç"], c:"Günlük 8 bardak (~2 litre) hedefi iyi bir başlangıçtır. AkılKüpü Su sekmesinde bardakları işaretle; tarayıcıda saklanır."},
-  {k:["pomodoro","mola","odak"], c:"25 dk odak + 5 dk mola klasik pomodorodur. Zor konularda 50/10 da kullanılır. Telefonu uzak tut."},
-  {k:["obp","diploma","kırık"], c:"OBP = diploma notu × 5. Yerleştirmeye katkı genelde OBP × 0.12. Aynı programa yerleşip ayrılırsan kırık OBP uygulanabilir (katkı düşer)."},
-  {k:["dgs","ales"], c:"DGS ön lisans → lisans dikey geçiş; sözel/sayısal net + ÖBP ile puanlanır. ALES lisansüstü için; sayısal, sözel ve eşit ağırlık puanları üretilir."},
-  {k:["deneme","yanlış","analiz"], c:"Denemeyi kaydet, net trendine bak. Aynı konuda 3+ yanlış varsa o konuyu yeniden çalış. Kıyas sekmesiyle iki denemeyi karşılaştır."},
-  {k:["motivasyon","stres","korku"], c:"Stres normaldir. Küçük hedefler koy, seri gününü bozma, uyku ve suyu aksatma. Bir günde her şeyi bitirmek zorunda değilsin."},
-  {k:["takdir","teşekkür","belge"], c:"Genelde dönem ortalaması 85+ takdir, 70–84.99 teşekkür belgesi için kullanılır (okul yönetmeliğine göre değişir). Simülasyon bilgilendirme amaçlıdır."},
-  {k:["merhaba","selam","hey"], c:"Merhaba! AkılKüpü Asistan burda. LGS, YKS, KPSS, plan, BMI veya su hakkında sor."},
-  {k:["kimsin","nesin","yapay"], c:"Ben AkılKüpü PRO içinde çalışan çevrimdışı kural tabanlı asistanım. İnternete bağlanmam; site içi bilgiyle yanıtlarım. Kurucu: Enes Kurt."},
-];
-function aiYanit(soru) {
-  const s = (soru || '').toLowerCase().trim();
-  if (!s) return 'Bir soru yaz veya üstteki hızlı butonlardan birini dene.';
-  let best = null, score = 0;
-  AI_KB.forEach(row => {
-    let sc = 0;
-    row.k.forEach(k => { if (s.includes(k)) sc++; });
-    if (sc > score) { score = sc; best = row.c; }
-  });
-  if (best) return best;
-  return 'Bu konuda net bir kural bulamadım. Şunu dene: "LGS net", "YKS puan", "KPSS P3", "çalışma planı", "BMI", "su", "pomodoro", "OBP". Resmi sonuçlar MEB/ÖSYM\'ye aittir.';
-}
-function aiMesaj(kim, metin) {
-  const box = document.getElementById('aiChat');
-  if (!box) return;
-  const div = document.createElement('div');
-  div.className = kim === 'sen' ? 'text-right' : '';
-  div.innerHTML = kim === 'sen'
-    ? `<span class="inline-block px-3 py-2 rounded-xl bg-blue-600/30 text-blue-100 text-sm">${metin}</span>`
-    : `<span class="text-violet-400 font-bold">Asistan:</span> <span class="text-slate-200">${metin}</span>`;
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
-}
-function aiGonder() {
-  const inp = document.getElementById('aiInput');
-  const q = (inp && inp.value || '').trim();
-  if (!q) return;
-  aiMesaj('sen', q);
-  if (inp) inp.value = '';
-  setTimeout(() => aiMesaj('ai', aiYanit(q)), 200);
-}
-function aiHizli(q) {
-  const inp = document.getElementById('aiInput');
-  if (inp) inp.value = q;
-  aiGonder();
-}
-
-function uykuHesapla() {
-  const y = document.getElementById('uykuYat')?.value || '23:30';
-  const k = document.getElementById('uykuKalk')?.value || '07:00';
-  const [yh, ym] = y.split(':').map(Number);
-  const [kh, km] = k.split(':').map(Number);
-  let dk = (kh*60+km) - (yh*60+ym);
-  if (dk < 0) dk += 24*60;
-  const saat = (dk/60);
-  const el = document.getElementById('uykuSure');
-  const ym2 = document.getElementById('uykuYorum');
-  if (el) el.textContent = Math.floor(saat) + ' sa ' + (dk%60) + ' dk';
-  let yor = 'İdeal aralığa yakın.';
-  if (saat < 6) yor = 'Az uyku — odak düşer. 7–9 saat hedefle.';
-  else if (saat < 7) yor = 'Biraz kısa; mümkünse 30–60 dk uzat.';
-  else if (saat <= 9) yor = 'İyi uyku süresi. Sınav günü de benzer saatleri koru.';
-  else yor = 'Uzun uyku; uykuyu sabaha yaymak enerjiyi dengeleyebilir.';
-  if (ym2) ym2.textContent = yor;
-}
-
-const MOT_LIST = [
-  'Bugün bir konu bitirmen, yarın on soru daha net demektir.',
-  'Küçük net artışları birikir. Her gün +0.5 net bile fark eder.',
-  'Yanlışlar düşman değil, harita. Onlara bakıp yön bul.',
-  'Pomodoro başlat. Sadece 25 dakika. Sonra karar ver.',
-  'Su iç, dik otur, bir test çöz. Hareket motivasyonu getirir.',
-  'En iyi plan, uyguladığın plandır. Basit tut.',
-  'Sen yeterince zekisin; eksik olan genelde süre ve tekrar.',
-  'Dün kalan yerden devam et. Mükemmel başlangıç arama.',
-  'AkılKüpü PRO yanında. Sen çalış, sistem hesaplasın.',
-  'Hedef okul bir sonuçtur. Süreç bugünkü 25 dakikadır.',
-];
-function motYeni() {
-  const el = document.getElementById('motMetin');
-  if (!el) return;
-  el.textContent = MOT_LIST[Math.floor(Math.random()*MOT_LIST.length)];
-}
-
-function notKaydet() {
-  const v = document.getElementById('notDefter')?.value || '';
-  try { localStorage.setItem('akilkupu_not', v); } catch(e) {}
-}
-function notYukle() {
-  try {
-    const v = localStorage.getItem('akilkupu_not') || '';
-    const el = document.getElementById('notDefter');
-    if (el) el.value = v;
-  } catch(e) {}
-}
-function notTemizle() {
-  const el = document.getElementById('notDefter');
-  if (el) el.value = '';
-  notKaydet();
-}
-
-let kronTimer=null, kronSn=0;
-function kronGoster() {
-  const h = Math.floor(kronSn/3600), m = Math.floor((kronSn%3600)/60), s = kronSn%60;
-  const el = document.getElementById('kronGoster');
-  if (el) el.textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-}
-function kronBaslat() {
-  if (kronTimer) return;
-  kronTimer = setInterval(() => { kronSn++; kronGoster(); }, 1000);
-}
-function kronDur() { if (kronTimer) { clearInterval(kronTimer); kronTimer=null; } }
-function kronSifir() { kronDur(); kronSn=0; kronGoster(); }
-
-function yuzdelikHesapla() {
-  const p = parseFloat(document.getElementById('ydPuan')?.value) || 0;
-  let dilim=50, sira=500000;
-  if (p>=480){dilim=0.5;sira=5000;}
-  else if (p>=460){dilim=1.5;sira=15000;}
-  else if (p>=440){dilim=4;sira=40000;}
-  else if (p>=420){dilim=8;sira=80000;}
-  else if (p>=400){dilim=15;sira=150000;}
-  else if (p>=350){dilim=30;sira=300000;}
-  const d=document.getElementById('ydDilim'), s=document.getElementById('ydSira');
-  if (d) d.textContent = '%'+dilim;
-  if (s) s.textContent = sira.toLocaleString('tr-TR');
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-            motYeni();
-            yuzdelikHesapla();
-            uykuHesapla();
-            notYukle();
+        window.addEventListener('DOMContentLoaded', () => {
             yksHesapla(); kpssHesapla(); saglikHesapla(); takdirHesapla(); planHesapla(); denemeYukle(); suGoster(); pomoSayacGoster();
             favoriYukle(); seriYukle(); kelimeInit(); kiyasHesapla(); profilYukle(); obpHesapla(); dgsHesapla(); alesHesapla(); hedefNetHesapla(); aracYuzde(); aracFaiz(); aracNot(); aracZaman(); aracKdv(); aracYol();
             try {
